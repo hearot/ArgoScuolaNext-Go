@@ -19,3 +19,19 @@ func TestLogin(t *testing.T) {
 		log.Fatal(err)
 	}
 }
+
+func TestMethod(t *testing.T) {
+	credentials := Credentials{
+		username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		schoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Orario())
+}

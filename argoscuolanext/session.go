@@ -2,6 +2,7 @@ package session
 
 import (
 	"github.com/asmcos/requests"
+	"strconv"
 	"time"
 )
 
@@ -109,9 +110,10 @@ func (s *Session) request(method string, date time.Time) (interface{}, error) {
 			"x-version":    argoVersion,
 			"user-agent":   "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
 			"x-cod-min":    s.credentials.schoolCode,
-			"x-prg-alunno": s.keys["prgAlunno"].(string),
-			"x-prg-scheda": s.keys["prgScheda"].(string),
-			"x-prg-scuola": s.keys["prgScuola"].(string),
+			"x-auth-token": string(s.keys["authToken"].(string)),
+			"x-prg-alunno": strconv.Itoa(int(s.keys["prgAlunno"].(float64))),
+			"x-prg-scheda": strconv.Itoa(int(s.keys["prgScheda"].(float64))),
+			"x-prg-scuola": strconv.Itoa(int(s.keys["prgScuola"].(float64))),
 		},
 		requests.Params{
 			"_dc":       time.Now().Format("20060102150405"),
@@ -130,4 +132,44 @@ func (s *Session) request(method string, date time.Time) (interface{}, error) {
 	}
 
 	return res, nil
+}
+
+func (s *Session) Oggi(date time.Time) (interface{}, error) {
+	return s.request("assenze", date)
+}
+
+func (s *Session) Assenze() (interface{}, error) {
+	return s.request("assenze", time.Now())
+}
+
+func (s *Session) Notedisciplinari() (interface{}, error) {
+	return s.request("notedisciplinari", time.Now())
+}
+
+func (s *Session) Votigiornalieri() (interface{}, error) {
+	return s.request("votigiornalieri", time.Now())
+}
+
+func (s *Session) Votiscrutinio() (interface{}, error) {
+	return s.request("votiscrutinio", time.Now())
+}
+
+func (s *Session) Compiti() (interface{}, error) {
+	return s.request("compiti", time.Now())
+}
+
+func (s *Session) Argomenti() (interface{}, error) {
+	return s.request("argomenti", time.Now())
+}
+
+func (s *Session) Promemoria() (interface{}, error) {
+	return s.request("promemoria", time.Now())
+}
+
+func (s *Session) Orario() (interface{}, error) {
+	return s.request("orario", time.Now())
+}
+
+func (s *Session) Docenticlasse() (interface{}, error) {
+	return s.request("docenticlasse", time.Now())
 }
