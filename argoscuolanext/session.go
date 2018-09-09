@@ -114,7 +114,8 @@ func (s *Session) request(method string, date time.Time) (interface{}, error) {
 			"x-prg-scuola": s.keys["prgScuola"].(string),
 		},
 		requests.Params{
-			"_dc": time.Now().Format("20060102150405"),
+			"_dc":       time.Now().Format("20060102150405"),
+			"datGiorno": date.Format("2006-01-02"),
 		},
 	)
 
