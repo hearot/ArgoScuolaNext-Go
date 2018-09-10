@@ -1,4 +1,6 @@
 # ArgoScuolaNext API in Go
+[![GoDoc](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext?status.svg)](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext)
+
 Programma che utilizza le API di ArgoScuolaNext per gestire e vedere le tue informazioni.
 
 [ArgoScuolaNext APIs in Php](https://github.com/hearot/ArgoScuolaNext)
