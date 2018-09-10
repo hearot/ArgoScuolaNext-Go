@@ -4,7 +4,7 @@ Programma che utilizza le API di ArgoScuolaNext per gestire e vedere le tue info
 [ArgoScuolaNext APIs in Php](https://github.com/hearot/ArgoScuolaNext)
 [ArgoScuolaNext APIs in Python](https://github.com/hearot/ArgoScuolaNext-Python)
 
-[English description of the client](README-md.md)
+[English description of the client](README-en.md)
 
 ## Tabella dei contenuti
   - [0. Installazione](#installazione)
@@ -21,6 +21,7 @@ Programma che utilizza le API di ArgoScuolaNext per gestire e vedere le tue info
     - [Orario](#orario)
     - [Docenti](#docenti)
   - [3. Logout](#log-out)
+  - [4. Documentazione](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext)
 
 ## Installazione
 Puoi installare facilmente questo client di ArgoScuolaNext utilizzando `go get`:

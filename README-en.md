@@ -21,6 +21,7 @@ Client that uses ArgoScuolaNext APIs to manage and view your informations on it.
     - [Class schedule](#class-schedule)
     - [Teachers](#teachers)
   - [3. Logout](#log-out)
+  - [4. Documentation](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext)
 
 ## Installation
 You can easily install that package using `go get`:
