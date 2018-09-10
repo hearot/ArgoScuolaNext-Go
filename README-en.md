@@ -1,46 +1,46 @@
-# ArgoScuolaNext API in Go
-Programma che utilizza le API di ArgoScuolaNext per gestire e vedere le tue informazioni.
+# ArgoScuolaNext APIs
+Client that uses ArgoScuolaNext APIs to manage and view your informations on it.
 
 [ArgoScuolaNext APIs in Php](https://github.com/hearot/ArgoScuolaNext)
 [ArgoScuolaNext APIs in Python](https://github.com/hearot/ArgoScuolaNext-Python)
 
-[English description of the client](README-md.md)
+[Italian description of the client](README.md)
 
-## Tabella dei contenuti
-  - [0. Installazione](#installazione)
-  - [1. Importare le API](#importare-le-api)
+## Table of Contents
+  - [0. Installation](#installation)
+  - [1. Import APIs](#import-apis)
   - [2. Log in](#log-in)
-    - [Attività della giornata](#attività-della-giornata)
-    - [Assenze](#assenze)
-    - [Note disciplinari](#note-disciplinari)
-    - [Voti giornalieri](#voti-giornalieri)
-    - [Voti scrutinio](#voti-scrutinio)
-    - [Compiti](#compiti)
-    - [Argomenti delle lezioni](#argomenti-delle-lezioni)
-    - [Promemoria](#promemoria)
-    - [Orario](#orario)
-    - [Docenti](#docenti)
+    - [What happened today](#what-happened-today)
+    - [Absences](#absences)
+    - [Disciplinary notes](#disciplinary-notes)
+    - [Daily marks](#daily-marks)
+    - [Final marks](#final-marks)
+    - [Homework](#homework)
+    - [Lesson topics](#lesson-topics)
+    - [Class reminder](#class-reminder)
+    - [Class schedule](#class-schedule)
+    - [Teachers](#teachers)
   - [3. Logout](#log-out)
 
-## Installazione
-Puoi installare facilmente questo client di ArgoScuolaNext utilizzando `go get`:
+## Installation
+You can easily install that package using `go get`:
 ```bash
 go get github.com/hearot/argoscuolanext-go/argoscuolanext
 ```
 
-O, se vuoi aggiornare il modulo:
+Or, if you want to upgrade the package:
 ```bash
 go get -u github.com/hearot/argoscuolanext-go/argoscuolanext
 ```
 
-## Importare le API
-Devi usare `import` per importare tutto il pacchetto.
+## Import APIs
+You must use `import` to import all argoscuolanext package.
 ```go
 import "github.com/hearot/argoscuolanext-go/argoscuolanext"
 ```
 
 ## Log in
-Per utilizzare le API dovrai prima definire lo strutto `Credentials` ed utilizzare il metodo `Login` per accedere.
+To log in you have to define your `Credentials` struct and call the `Login()` function on it.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -49,9 +49,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     _, err = credentials.Login()
@@ -62,8 +62,9 @@ func main() {
 }
 ```
 
-### Attività della giornata
-Puoi richiamare la query `oggi` usando il metodo `Session.Oggi()`. Devi obbligatoriamente impostare la data, puoi passare `time.Now()` se vuoi che richiami il metodo per oggi.
+### What happened today
+You can call `oggi` query by using `Session.Oggi()` function. You have to pass a `time.Time` object as parameter, use `time.Now()` for today.
+
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -73,9 +74,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -92,7 +93,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -103,9 +104,9 @@ Output d'esempio:
             "numAnno":2017,
             "prgMateria":"prgMateria",
             "prgClasse":"prgClasse",
-            "desCompiti":"Matematica: studiare le frazioni.",
+            "desCompiti":"Maths: Study fractions.",
             "prgScuola":"prgScuola",
-            "docente":"(Prof. NOME DELL'INSEGNANTE)",
+            "docente":"(Prof. NAME OF YOUR TEACHER)",
             "codMin":"schoolCode"
          },
          "giorno":"2017-10-14",
@@ -126,8 +127,8 @@ Output d'esempio:
             "prgMateria":"prgMateria",
             "prgClasse":"prgClasse",
             "prgScuola":"prgScuola",
-            "desArgomento":"Verifica d'Italiano.",
-            "docente":"(Prof. NOME DELL'INSEGNANTE)",
+            "desArgomento":"Italian test.",
+            "docente":"(Prof. NAME OF YOUR TEACHER)",
             "codMin":"schoolCode"
          },
          "giorno":"2017-10-14",
@@ -181,8 +182,8 @@ Output d'esempio:
 }
 ```
 
-### Assenze
-Puoi richiamare la query `assenze` usando la funzione `Session.Assenze()`.
+### Absences
+You can call `assenze` query by using `Session.Assenze()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -191,9 +192,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -210,7 +211,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -226,16 +227,16 @@ Output d'esempio:
          "numAnno":"2016",
          "prgAlunno":"prgAlunno",
          "flgDaGiustificare":"1",
-         "giustificataDa":"(Prof. NOME DELL'INSEGNANTE)",
+         "giustificataDa":"(Prof. NAME OF YOUR TEACHER)",
          "desAssenza":"",
-         "registrataDa":"(Prof. NOME DELL'INSEGNANTE)"
+         "registrataDa":"(Prof. NAME OF YOUR TEACHER)"
       }
    ]
 }
 ```
 
-### Note disciplinari
-Puoi richiamare la query `notedisciplinari` usando la funzione `Session.Notedisciplinari()`.
+### Disciplinary notes
+You can call `notedisciplinari` query by using `Session.Notedisciplinari()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -244,9 +245,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -263,7 +264,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -275,17 +276,17 @@ Output d'esempio:
          "prgNota":"prgNota",
          "prgScheda":"prgScheda",
          "prgScuola":"prgScuola",
-         "desNota":"Lo studente non ha fatto i compiti.",
+         "desNota":"The student hasn't done the homeworks.",
          "datNota":"2018-10-14",
-         "docente":"(Prof. NOME DELL'INSEGNANTE)",
+         "docente":"(Prof. NAME OF YOUR TEACHER)",
          "codMin":"schoolCode"
       }
    ]
 }
 ```
 
-### Voti giornalieri
-Puoi richiamare la query `votigiornalieri` usando la funzione `Session.Votigiornalieri()`.
+### Daily marks
+You can call `votigiornalieri` query by using `Session.Votigiornalieri()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -294,9 +295,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -313,7 +314,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -331,14 +332,14 @@ Output d'esempio:
          "numAnno":"2016",
          "prgAlunno":"prgAlunno",
          "desCommento":"",
-         "docente":"(Prof NOME DELL'INSEGNANTE)\n)"
+         "docente":"(Prof NAME OF YOUR TEACHER)\n)"
       }
    ]
 }
 ```
 
-### Voti scrutinio
-Puoi richiamare la query `votiscrutinio` usando la funzione `Session.Votiscrutinio()`.
+### Final marks
+You can call `votiscrutinio` query by using `Session.Votiscrutinio()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -347,9 +348,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -366,7 +367,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -393,8 +394,8 @@ Output d'esempio:
 }
 ```
 
-### Compiti
-Puoi richiamare la query `compiti` usando la funzione `Session.Compiti()`.
+### Homeworks
+You can call `compiti` query by using `Session.Compiti()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -403,9 +404,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -422,7 +423,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -432,17 +433,17 @@ Output d'esempio:
          "numAnno":"2016",
          "prgMateria":"prgMateria",
          "prgClasse":"prgClasse",
-         "desCompiti":"Fare esercizio numero 31 a pagina 2.",
+         "desCompiti":"Do exercise number 3 at page 31.",
          "prgScuola":"2",
-         "docente":"(Prof. NOME DELL'INSEGNANTE)",
+         "docente":"(Prof. NAME OF YOUR TEACHER)",
          "codMin":"schoolCode"
       }
    ]
 }
 ```
 
-### Argomenti delle lezioni
-Puoi richiamare la query `argomenti` usando la funzione `Session.Argomenti()`.
+### Lesson topics
+You can call `argomenti` query by using `Session.Argomenti()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -451,9 +452,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -470,7 +471,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -481,16 +482,16 @@ Output d'esempio:
          "prgMateria":"prgMateria",
          "prgClasse":"prgClasse",
          "prgScuola":"prgScuola",
-         "desArgomento":"Abbiamo visto un video.",
-         "docente":"(Prof. NOME DELL'INSEGNANTE)",
+         "desArgomento":"We have watched a video.",
+         "docente":"(Prof. NAME OF YOUR TEACHER)",
          "codMin":"schoolCode\n)"
       }
    ]
 }g
 ```
 
-### Promemoria
-Puoi richiamare la query `promemoria` usando la funzione `Session.Promemoria()`.
+### Class reminder
+You can call `promemoria` query by using `Session.Promemoria()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -499,9 +500,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -510,7 +511,7 @@ func main() {
         log.Fatal(err)
     }
 
-    _, err = session.Promemoria()
+    _, err = session.Promemoriai()
 
     if err != nil {
         log.Fatal(err)
@@ -518,7 +519,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -530,15 +531,15 @@ Output d'esempio:
          "prgClasse":"prgClasse",
          "prgAnagrafe":"prgAnagrafe",
          "prgScuola":"prgScuola",
-         "desMittente":"NOME DELL'INSEGNANTE",
+         "desMittente":"NAME OF YOUR TEACHER",
          "codMin":"schoolCode\n)"
       }
    ]
 }
 ```
 
-### Orario
-Puoi richiamare la query `orario` usando la funzione `Session.Orario()`.
+### Class schedule
+You can call `orario` query by using `Session.Orario()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -547,9 +548,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -566,7 +567,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -578,7 +579,7 @@ Output d'esempio:
          "lezioni":[
             {
                "materia":"DIRITTO ED ECON.",
-               "docente":"(Prof. NOME DELL'INSEGNANTE)"
+               "docente":"(Prof. NAME OF YOUR TEACHER)"
             }
          ],
          "numGiorno":"1",
@@ -588,8 +589,8 @@ Output d'esempio:
 }
 ```
 
-### Docenti
-Puoi richiamare la query `docenticlasse` usando la funzione `Session.Docenticlasse()`.
+### Teachers
+You can call `docenticlasse` query by using `Session.Docenticlasse()` function.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -598,9 +599,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()
@@ -617,7 +618,7 @@ func main() {
 }
 ```
 
-Output d'esempio:
+Example output:
 ```json
 {
    "dati":[
@@ -628,8 +629,8 @@ Output d'esempio:
          "materie":"(S.I. BIOLOGIA)",
          "docente":{
             "email":"",
-            "nome":"NOME",
-            "cognome":"DELL'INSEGNANTE"
+            "nome":"NAME",
+            "cognome":"OF YOUR TEACHER"
          },
          "codMin":"schoolCode"
       }
@@ -638,7 +639,7 @@ Output d'esempio:
 ```
 
 ## Log out
-Per fare il logout devi assegnare il valore `nil` all'oggetto.
+To log out you have to assign `nil` to the object.
 ```go
 import (
     "github.com/hearot/argoscuolanext-go/argoscuolanext"
@@ -647,9 +648,9 @@ import (
 
 func main() {
     credentials = argoscuolanext.Credentials{
-        Username: "IL_TUO_USERNAME",
-        Password: "LA_TUA_PASSWORD",
-        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+        Username: "YOUR_USERNAME",
+        Password: "YOUR_PASSWORD",
+        SchoolCode: "YOUR_SCHOOL_CODE",
     }
 
     session, err = credentials.Login()

@@ -27,6 +27,8 @@
 // be used to check a student's statistics using just his
 // Credentials. For example:
 //
+//     package main
+//
 //     import (
 //         "github.com/hearot/argoscuolanext-go/argoscuolanext"
 //         "log"
