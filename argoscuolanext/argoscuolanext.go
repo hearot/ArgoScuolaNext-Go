@@ -1,4 +1,4 @@
-package session
+package argoscuolanext
 
 import (
 	"github.com/asmcos/requests"
