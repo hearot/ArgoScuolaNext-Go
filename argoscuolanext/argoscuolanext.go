@@ -1,6 +1,7 @@
 package argoscuolanext
 
 import (
+	"errors"
 	"github.com/asmcos/requests"
 	"strconv"
 	"time"
@@ -52,13 +53,13 @@ func (c *Credentials) Login() (Session, error) {
 	)
 
 	if err != nil {
-		return Session{}, err
+		return Session{}, errors.New("authentication failed, check your credentials")
 	}
 
 	err = r.Json(&resAuth)
 
 	if err != nil {
-		return Session{}, err
+		return Session{}, errors.New("authentication failed, check your credentials")
 	}
 
 	for k, v := range resAuth.(map[string]interface{}) {
@@ -89,7 +90,7 @@ func (c *Credentials) Login() (Session, error) {
 	err = r.Json(&resKeys)
 
 	if err != nil {
-		return Session{}, err
+		return Session{}, errors.New("authentication failed, check your credentials")
 	}
 
 	session.keys = resKeys.([]interface{})[0].(map[string]interface{})
