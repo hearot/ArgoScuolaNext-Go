@@ -61,9 +61,9 @@ import (
 // Credentials is the fundamental struct of the
 // entire API, it stores the user Credentials.
 type Credentials struct {
-	SchoolCode string
-	Username   string
-	Password   string
+	SchoolCode string // The School code of your School on ArgoScuolaNext (not the ministerial code!)
+	Username   string // Your username on ArgoScuolaNext
+	Password   string // Your password on ArgoScuolaNext
 }
 
 // restApiUrl is the REST API Endpoint.
@@ -79,10 +79,10 @@ var argoVersion = "2.0.2"
 // to the API. It stores the Credentials, Keys and
 // tokens.
 type Session struct {
-	Credentials *Credentials
-	LoggedIn    bool
-	Auth        map[string]string
-	Keys        map[string]interface{}
+	Credentials *Credentials           // An instance of Credentials that stores your credentials
+	LoggedIn    bool                   // If the user logged in
+	Auth        map[string]string      // A map of tokens used for the Authentication
+	Keys        map[string]interface{} // A map of keys used to do the requests
 }
 
 // Login() is a method of Credentials struct
