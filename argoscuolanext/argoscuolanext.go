@@ -52,8 +52,10 @@
 package argoscuolanext
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/asmcos/requests"
+	"github.com/parnurzeal/gorequest"
 	"strconv"
 	"time"
 )
@@ -83,6 +85,13 @@ type Session struct {
 	LoggedIn    bool                   // If the user logged in
 	Auth        map[string]string      // A map of tokens used for the Authentication
 	Keys        map[string]interface{} // A map of keys used to do the requests
+}
+
+// Struct used by the Cambiopassword method to
+// change the password. It will be converted to JSON.
+type passwordStruct struct {
+	OldPassword string `json:"vecchiaPassword"` // The old password
+	NewPassword string `json:"nuovaPassword"`   // The new password
 }
 
 // Login() is a method of Credentials struct
@@ -202,6 +211,42 @@ func (s *Session) request(method string, date time.Time) (interface{}, error) {
 	return res, nil
 }
 
+// Post request is the method used by Session struct
+// to do a request to the API using a JSON body.
+// It will return the converted JSON.
+func (s *Session) postRequest(method string, body string, date time.Time) (interface{}, error) {
+	var res interface{}
+
+	request := gorequest.New()
+
+	_, bodyResp, errs := request.Post(restApiUrl+method).
+		Set("Content-Type", "application/json").
+		Set("x-key-app", argoKey).
+		Set("x-version", argoVersion).
+		Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36").
+		Set("x-cod-min", s.Credentials.SchoolCode).
+		Set("x-auth-token", string(s.Keys["authToken"].(string))).
+		Set("x-prg-alunno", strconv.Itoa(int(s.Keys["prgAlunno"].(float64)))).
+		Set("x-prg-scheda", strconv.Itoa(int(s.Keys["prgScheda"].(float64)))).
+		Set("x-prg-scuola", strconv.Itoa(int(s.Keys["prgScuola"].(float64)))).
+		Query("_dc=" + time.Now().Format("20060102150405")).
+		Query("datGiorno=" + date.Format("2006-01-02")).
+		Send(body).
+		End()
+
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+
+	err := json.Unmarshal([]byte(bodyResp), &res)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
 // Returns the student's absences.
 func (s *Session) Assenze() (interface{}, error) {
 	return s.request("assenze", time.Now())
@@ -254,4 +299,19 @@ func (s *Session) Votigiornalieri() (interface{}, error) {
 // Returns the student's final marks.
 func (s *Session) Votiscrutinio() (interface{}, error) {
 	return s.request("votiscrutinio", time.Now())
+}
+
+func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
+	m := passwordStruct{
+		OldPassword: s.Credentials.Password,
+		NewPassword: newPassword,
+	}
+
+	query, err := json.MarshalIndent(m, "", "  ")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.postRequest("cambiopassword", string(query), time.Now())
 }

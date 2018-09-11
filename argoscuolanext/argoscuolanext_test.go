@@ -58,3 +58,19 @@ func TestMethod(t *testing.T) {
 
 	log.Print(session.Docenticlasse())
 }
+
+func TestPassword(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Cambiopassword(os.Getenv("PASSWORD_ARGOSCUOLANEXT")))
+}
