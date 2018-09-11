@@ -184,6 +184,30 @@ type Settings struct {
 	AnnoScolastico    SchoolTime   `json:"annoScolastico"`    // The representation of the year, start & end dates
 }
 
+// Struct that represents an absence done by the student.
+type Absence struct {
+	CodEvento          string `json:"codEvento"`          // The event code
+	NumOra             string `json:"numOra"`             // The absence hours
+	DatGiustificazione string `json:"datGiustificazione"` // When the student has to justify the absence
+	PrgScuola          string `json:"prgScuola"`          // The student's school ID
+	PrgScheda          string `json:"prgScheda"`          // The student's ID
+	BinUID             string `json:"binUid"`             // The BinUID
+	CodMin             string `json:"codMin"`             // The ministerial code
+	DatAssenza         string `json:"datAssenza"`         // The absence date
+	NumAnno            string `json:"numAnno"`            // The year
+	PrgAlunno          string `json:"prgAlunno"`          // The student's ID in his classroom
+	FlgDaGiustificare  string `json:"flgDaGiustificare"`  // Justification flag
+	GiustificataDa     string `json:"giustificataDa"`     // Who justified the absence
+	DesAssenza         string `json:"desAssenza"`         // Description of the absence
+	RegistrataDa       string `json:"registrataDa"`       // Who registered the absence
+}
+
+// Struct that represents the response of the "assenze" method.
+type Absences struct {
+	Dati         []Absence    `json:"dati"`         // The absences done by the student
+	Abilitazioni Abilitations `json:"abilitazioni"` // The student's abilitations
+}
+
 // Login() is a method of Credentials struct
 // that is used to log in to the API. It will
 // return a Session instance.
@@ -252,11 +276,9 @@ func (c *Credentials) Login() (Session, error) {
 
 // Request is the method used by Session struct
 // to do a request to the API. It will return
-// the converted JSON.
-func (s *Session) request(method string, date time.Time) (interface{}, error) {
+// the JSON.
+func (s *Session) request(method string, date time.Time) (string, error) {
 	req := requests.Requests()
-
-	var res interface{}
 
 	r, err := req.Get(
 		restApiUrl+method,
@@ -278,16 +300,10 @@ func (s *Session) request(method string, date time.Time) (interface{}, error) {
 	)
 
 	if err != nil {
-		return nil, err
+		return "{}", err
 	}
 
-	err = r.Json(&res)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return r.Text(), nil
 }
 
 // Post request is the method used by Session struct
@@ -327,8 +343,18 @@ func (s *Session) postRequest(method string, body string, date time.Time) (inter
 }
 
 // Returns the student's absences.
-func (s *Session) Assenze() (interface{}, error) {
-	return s.request("assenze", time.Now())
+func (s *Session) Assenze() (Absences, error) {
+	absences := Absences{}
+
+	response, err := s.request("assenze", time.Now())
+
+	if err != nil {
+		return absences, err
+	}
+
+	json.Unmarshal([]byte(response), &absences)
+
+	return absences, nil
 }
 
 // Returns what the student's done.
