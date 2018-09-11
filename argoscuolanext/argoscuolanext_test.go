@@ -27,6 +27,7 @@ import (
 	"log"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestLogin(t *testing.T) {
@@ -36,14 +37,80 @@ func TestLogin(t *testing.T) {
 		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
 	}
 
-	_, err := credentials.Login()
+	session, err := credentials.Login()
 
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Print(session)
 }
 
-func TestMethod(t *testing.T) {
+func TestSession_Assenze(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Assenze())
+}
+
+func TestSession_Argomenti(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Argomenti())
+}
+
+func TestSession_Cambiopassword(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Cambiopassword(os.Getenv("PASSWORD_ARGOSCUOLANEXT")))
+}
+
+func TestSession_Compiti(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Compiti())
+}
+
+func TestSession_Docenticlasse(t *testing.T) {
 	credentials := Credentials{
 		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
 		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
@@ -59,7 +126,7 @@ func TestMethod(t *testing.T) {
 	log.Print(session.Docenticlasse())
 }
 
-func TestPassword(t *testing.T) {
+func TestSession_Oggi(t *testing.T) {
 	credentials := Credentials{
 		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
 		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
@@ -72,5 +139,85 @@ func TestPassword(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	log.Print(session.Cambiopassword(os.Getenv("PASSWORD_ARGOSCUOLANEXT")))
+	log.Print(session.Oggi(time.Now()))
+}
+
+func TestSession_Orario(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Orario())
+}
+
+func TestSession_Notedisciplinari(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Notedisciplinari())
+}
+
+func TestSession_Promemoria(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Promemoria())
+}
+
+func TestSession_Votigiornalieri(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Votigiornalieri())
+}
+
+func TestSession_Votiscrutinio(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(session.Votiscrutinio())
 }
