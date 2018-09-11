@@ -23,6 +23,7 @@ Programma che utilizza le API di ArgoScuolaNext per gestire e vedere le tue info
     - [Promemoria](#promemoria)
     - [Orario](#orario)
     - [Docenti](#docenti)
+    - [Cambio password](#cambia-password)
   - [3. Logout](#log-out)
   - [4. Documentazione](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext)
 
@@ -638,6 +639,44 @@ Output d'esempio:
          "codMin":"schoolCode"
       }
    ]
+}
+```
+
+### Cambia password
+Puoi richiamare la query `cambiopassword` usando la funzione `Session.Cambiopassword()` dando come parametro la nuova password.
+```go
+import (
+    "github.com/hearot/argoscuolanext-go/argoscuolanext"
+    "log"
+)
+
+func main() {
+    credentials = argoscuolanext.Credentials{
+        Username: "IL_TUO_USERNAME",
+        Password: "LA_TUA_PASSWORD",
+        SchoolCode: "IL_TUO_CODICE_SCUOLA",
+    }
+
+    session, err = credentials.Login()
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    _, err = session.Cambiopassword("NUOVA_PASSWORD")
+
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+```
+
+Output d'esempio:
+Example output:
+```json
+{
+  "message": "Cambio password effettuato con successo",
+  "success":true,
 }
 ```
 

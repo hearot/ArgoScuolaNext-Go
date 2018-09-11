@@ -301,6 +301,7 @@ func (s *Session) Votiscrutinio() (interface{}, error) {
 	return s.request("votiscrutinio", time.Now())
 }
 
+// Change the password of the user.
 func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
 	m := passwordStruct{
 		OldPassword: s.Credentials.Password,
