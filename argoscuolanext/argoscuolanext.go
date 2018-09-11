@@ -81,17 +81,107 @@ var argoVersion = "2.0.2"
 // to the API. It stores the Credentials, Keys and
 // tokens.
 type Session struct {
-	Credentials *Credentials           // An instance of Credentials that stores your credentials
-	LoggedIn    bool                   // If the user logged in
-	Auth        map[string]string      // A map of tokens used for the Authentication
-	Keys        map[string]interface{} // A map of keys used to do the requests
+	Credentials *Credentials   // An instance of Credentials that stores your credentials
+	LoggedIn    bool           // If the user logged in
+	Auth        Authentication // The representation of the Authentication tokens
+	Settings    []Settings     // An array of informations about the user
 }
 
 // Struct used by the Cambiopassword method to
 // change the password. It will be converted to JSON.
-type passwordStruct struct {
+type PasswordStruct struct {
 	OldPassword string `json:"vecchiaPassword"` // The old password
 	NewPassword string `json:"nuovaPassword"`   // The new password
+}
+
+// Struct used for the Authentication. It contains the type of the user and
+// the authentication token.
+type Authentication struct {
+	Token      string `json:"token"`      // The authentication token
+	TipoUtente string `json:"tipoUtente"` // The type of the user
+}
+
+// Struct used to define all abilitations (what the users can do using
+// the APIs).
+type Abilitations struct {
+	OrarioScolastico             bool `json:"ORARIO_SCOLASTICO"`              // If the student can view his timetable
+	ValutazioniPeriodiche        bool `json:"VALUTAZIONI_PERIODICHE"`         // If the student can view his periodic marks
+	CompitiAssegnati             bool `json:"COMPITI_ASSEGNATI"`              // If the student can view his homeworks
+	TabelloneScrutinioFinale     bool `json:"TABELLONE_SCRUTINIO_FINALE"`     // If the student can view his final marks
+	CurriculumVisualizzaFamiglia bool `json:"CURRICULUM_VISUALIZZA_FAMIGLIA"` // If the student can view the curriculum
+	ConsiglioDiIstituto          bool `json:"CONSIGLIO_DI_ISTITUTO"`          // If the student can view his school council
+	NoteDisciplinari             bool `json:"NOTE_DISCIPLINARI"`              // If the student can view his annotations
+	AccessoConControlloScheda    bool `json:"ACCESSO_CON_CONTROLLO_SCHEDA"`   // If the student can access his manage his data
+	VotiGiudizi                  bool `json:"VOTI_GIUDIZI"`                   // If the student can view his final marks with opinions
+	ValutazioniGiornaliere       bool `json:"VALUTAZIONI_GIORNALIERE"`        // If the student can view his marks
+	IgnoraOpzioneVotiDocenti     bool `json:"IGNORA_OPZIONE_VOTI_DOCENTI"`    // If the student can't manage the marks
+	ArgomentiLezione             bool `json:"ARGOMENTI_LEZIONE"`              // If the student can view his classes arguments
+	ConsiglioDiClasse            bool `json:"CONSIGLIO_DI_CLASSE"`            // If the student can view his class council
+	ValutazioniSospesePeriodiche bool `json:"VALUTAZIONI_SOSPESE_PERIODICHE"` // If the student can view the middle marks ("pagellino")
+	PinVoti                      bool `json:"PIN_VOTI"`                       // The pin to access the marks
+	PagelleOnline                bool `json:"PAGELLE_ONLINE"`                 // If the student can view his school reports online
+	RecuperoDebitoInt            bool `json:"RECUPERO_DEBITO_INT"`            // If the student has got the school debt
+	RecuperoDebitoSf             bool `json:"RECUPERO_DEBITO_SF"`             // It the student has got the school debt during winter
+	PromemoriaClasse             bool `json:"PROMEMORIA_CLASSE"`              // If the student can view his schedules & tasks
+	VisualizzaBachecaPubblica    bool `json:"VISUALIZZA_BACHECA_PUBBLICA"`    // If the student can view his showcase
+	CurriculumModificaFamiglia   bool `json:"CURRICULUM_MODIFICA_FAMIGLIA"`   // If the student can edit his curriculum
+	TabellonePeriodiIntermedi    bool `json:"TABELLONE_PERIODI_INTERMEDI"`    // If the student can view his winter marks ("pagella del primo periodo")
+	TasseScolastiche             bool `json:"TASSE_SCOLASTICHE"`              // If the student has to pay school taxes
+	DocentiClasse                bool `json:"DOCENTI_CLASSE"`                 // If the student can view his teachers
+	VisualizzaAssenzeRegProf     bool `json:"VISUALIZZA_ASSENZE_REG_PROF"`    // If the student can manage absences of his class
+	VisualizzaCurriculum         bool `json:"VISUALIZZA_CURRICULUM"`          // If the student can view the curriculum
+	AssenzePerData               bool `json:"ASSENZE_PER_DATA"`               // If the student can view his absences filtered by date
+	RichiestaCertificati         bool `json:"RICHIESTA_CERTIFICATI"`          // If the student can request the certificates
+	AccessoSenzaControllo        bool `json:"ACCESSO_SENZA_CONTROLLO"`        // If the student can access without surveillance
+	PrenotazioneAlunni           bool `json:"PRENOTAZIONE_ALUNNI"`            // If the student can book a date with his teachers
+	ModificaRecapiti             bool `json:"MODIFICA_RECAPITI"`              // If the student can edit his shipping information
+	PagellinoOnline              bool `json:"PAGELLINO_ONLINE"`               // If the student can manage his middle marks ("pagellino")
+	MediaPesata                  bool `json:"MEDIA_PESATA"`                   // If the school is using the weighted average
+	GiustificazioniAssenze       bool `json:"GIUSTIFICAZIONI_ASSENZE"`        // If the student can justify his absences
+}
+
+// Struct that represents the start and the end of the school.
+type SchoolTime struct {
+	DatInizio string `json:"datInizio"` // The start (format: YYYY-MM-DD)
+	DatFine   string `json:"datFine"`   // The end (format: YYYY-MM-DD)
+}
+
+// Struct that represents the student.
+type Student struct {
+	DesCf                string `json:"desCf"`                // The student's "codice fiscale"
+	DesCognome           string `json:"desCognome"`           // The student's surname
+	DesVia               string `json:"desVia"`               // The student's house street
+	DesCap               string `json:"desCap"`               // The student's house cap
+	DesNome              string `json:"desNome"`              // The student's name
+	DesCellulare         string `json:"desCellulare"`         // The student's mobile number
+	DesComuneNascita     string `json:"desComuneNascita"`     // The student's birthplace
+	FlgSesso             string `json:"flgSesso"`             // The student's gender
+	DatNascita           string `json:"datNascita"`           // The student's birth
+	DesIndirizzoRecapito string `json:"desIndirizzoRecapito"` // The student's house for shipping
+	DesComuneRecapito    string `json:"desComuneRecapito"`    // The student's city for shipping
+	DesCapResidenza      string `json:"desCapResidenza"`      // The student's city cap
+	DesComuneResidenza   string `json:"desComuneResidenza"`   // The student's city
+	DesTelefono          string `json:"desTelefono"`          // The student's house phone
+	DesCittadinanza      string `json:"desCittadinanza"`      // The student's citizenship
+}
+
+// Struct that contains all informations about an user.
+type Settings struct {
+	SchedaSelezionata bool         `json:"schedaSelezionata"` // The chosen student
+	DesScuola         string       `json:"desScuola"`         // The student's school
+	PrgScuola         int          `json:"prgScuola"`         // The student's school ID
+	PrgScheda         int          `json:"prgScheda"`         // The student's ID
+	DesSede           string       `json:"desSede"`           // The student's school venue
+	AuthToken         string       `json:"authToken"`         // The student's auth token
+	Alunno            Student      `json:"alunno"`            // The student
+	CodMin            string       `json:"codMin"`            // The ministerial code
+	NumAnno           int          `json:"numAnno"`           // The year
+	PrgAlunno         int          `json:"prgAlunno"`         // The student's ID in his classroom
+	PrgClasse         int          `json:"prgClasse"`         // The student's classroom ID
+	DesDenominazione  string       `json:"desDenominazione"`  // The student's denomination
+	DesCorso          string       `json:"desCorso"`          // The student's classroom letter (in Italy, all classes have got a letter)
+	Abilitazioni      Abilitations `json:"abilitazioni"`      // What the student can do using the APIs
+	AnnoScolastico    SchoolTime   `json:"annoScolastico"`    // The representation of the year, start & end dates
 }
 
 // Login() is a method of Credentials struct
@@ -100,13 +190,8 @@ type passwordStruct struct {
 func (c *Credentials) Login() (Session, error) {
 	req := requests.Requests()
 
-	var resAuth interface{}
-	var resKeys interface{}
-
 	session := Session{
 		Credentials: c,
-		Auth:        make(map[string]string),
-		Keys:        make(map[string]interface{}),
 	}
 
 	r, err := req.Get(
@@ -129,14 +214,10 @@ func (c *Credentials) Login() (Session, error) {
 		return Session{}, errors.New("authentication failed, check your Credentials")
 	}
 
-	err = r.Json(&resAuth)
+	err = r.Json(&session.Auth)
 
 	if err != nil {
 		return Session{}, errors.New("authentication failed, check your Credentials")
-	}
-
-	for k, v := range resAuth.(map[string]interface{}) {
-		session.Auth[string(k)] = v.(string)
 	}
 
 	session.LoggedIn = true
@@ -149,7 +230,7 @@ func (c *Credentials) Login() (Session, error) {
 			"x-version":    argoVersion,
 			"user-agent":   "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
 			"x-cod-min":    session.Credentials.SchoolCode,
-			"x-auth-token": session.Auth["token"],
+			"x-auth-token": session.Auth.Token,
 		},
 		requests.Params{
 			"_dc": time.Now().Format("20060102150405"),
@@ -160,13 +241,11 @@ func (c *Credentials) Login() (Session, error) {
 		return Session{Credentials: c}, err
 	}
 
-	err = r.Json(&resKeys)
+	err = r.Json(&session.Settings)
 
 	if err != nil {
 		return Session{}, errors.New("authentication failed, check your Credentials")
 	}
-
-	session.Keys = resKeys.([]interface{})[0].(map[string]interface{})
 
 	return session, nil
 }
@@ -187,10 +266,10 @@ func (s *Session) request(method string, date time.Time) (interface{}, error) {
 			"x-version":    argoVersion,
 			"user-agent":   "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
 			"x-cod-min":    s.Credentials.SchoolCode,
-			"x-auth-token": string(s.Keys["authToken"].(string)),
-			"x-prg-alunno": strconv.Itoa(int(s.Keys["prgAlunno"].(float64))),
-			"x-prg-scheda": strconv.Itoa(int(s.Keys["prgScheda"].(float64))),
-			"x-prg-scuola": strconv.Itoa(int(s.Keys["prgScuola"].(float64))),
+			"x-auth-token": s.Auth.Token,
+			"x-prg-alunno": strconv.Itoa(s.Settings[0].PrgAlunno),
+			"x-prg-scheda": strconv.Itoa(s.Settings[0].PrgScheda),
+			"x-prg-scuola": strconv.Itoa(s.Settings[0].PrgScuola),
 		},
 		requests.Params{
 			"_dc":       time.Now().Format("20060102150405"),
@@ -225,10 +304,10 @@ func (s *Session) postRequest(method string, body string, date time.Time) (inter
 		Set("x-version", argoVersion).
 		Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36").
 		Set("x-cod-min", s.Credentials.SchoolCode).
-		Set("x-auth-token", string(s.Keys["authToken"].(string))).
-		Set("x-prg-alunno", strconv.Itoa(int(s.Keys["prgAlunno"].(float64)))).
-		Set("x-prg-scheda", strconv.Itoa(int(s.Keys["prgScheda"].(float64)))).
-		Set("x-prg-scuola", strconv.Itoa(int(s.Keys["prgScuola"].(float64)))).
+		Set("x-auth-token", s.Auth.Token).
+		Set("x-prg-alunno", strconv.Itoa(s.Settings[0].PrgAlunno)).
+		Set("x-prg-scheda", strconv.Itoa(s.Settings[0].PrgScheda)).
+		Set("x-prg-scuola", strconv.Itoa(s.Settings[0].PrgScuola)).
 		Query("_dc=" + time.Now().Format("20060102150405")).
 		Query("datGiorno=" + date.Format("2006-01-02")).
 		Send(body).
@@ -267,6 +346,22 @@ func (s *Session) Docenticlasse() (interface{}, error) {
 	return s.request("docenticlasse", time.Now())
 }
 
+// Change the password of the user.
+func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
+	m := PasswordStruct{
+		OldPassword: s.Credentials.Password,
+		NewPassword: newPassword,
+	}
+
+	query, err := json.MarshalIndent(m, "", "  ")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.postRequest("cambiopassword", string(query), time.Now())
+}
+
 // Returns the student's plan.
 //
 // You can view what's happening today or on another day just
@@ -299,20 +394,4 @@ func (s *Session) Votigiornalieri() (interface{}, error) {
 // Returns the student's final marks.
 func (s *Session) Votiscrutinio() (interface{}, error) {
 	return s.request("votiscrutinio", time.Now())
-}
-
-// Change the password of the user.
-func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
-	m := passwordStruct{
-		OldPassword: s.Credentials.Password,
-		NewPassword: newPassword,
-	}
-
-	query, err := json.MarshalIndent(m, "", "  ")
-
-	if err != nil {
-		return nil, err
-	}
-
-	return s.postRequest("cambiopassword", string(query), time.Now())
 }
