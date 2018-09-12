@@ -402,6 +402,22 @@ func (s *Session) Argomenti() (interface{}, error) {
 	return s.request("argomenti", time.Now())
 }
 
+// Cambiopassword is used to change the user's password.
+func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
+	m := PasswordStruct{
+		OldPassword: s.Credentials.Password,
+		NewPassword: newPassword,
+	}
+
+	query, err := json.MarshalIndent(m, "", "  ")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.postRequest("cambiopassword", string(query), time.Now())
+}
+
 // Compiti is used to return all student's homework.
 func (s *Session) Compiti() (interface{}, error) {
 	return s.request("compiti", time.Now())
@@ -420,22 +436,6 @@ func (s *Session) Docenticlasse() (Teachers, error) {
 	json.Unmarshal([]byte(response), &teachers)
 
 	return teachers, nil
-}
-
-// Cambiopassword is used to change the user's password.
-func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
-	m := PasswordStruct{
-		OldPassword: s.Credentials.Password,
-		NewPassword: newPassword,
-	}
-
-	query, err := json.MarshalIndent(m, "", "  ")
-
-	if err != nil {
-		return nil, err
-	}
-
-	return s.postRequest("cambiopassword", string(query), time.Now())
 }
 
 // Oggi is used to return what the student has done during a day.
