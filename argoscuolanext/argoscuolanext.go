@@ -481,3 +481,16 @@ func (s *Session) Votigiornalieri() (interface{}, error) {
 func (s *Session) Votiscrutinio() (interface{}, error) {
 	return s.request("votiscrutinio", time.Now())
 }
+
+// GetSession is used to return a session using a Settings object.
+func (s *Settings) GetSession() Session {
+	settings := *s
+
+	return Session{
+		LoggedIn: true,
+		Auth: Authentication{
+			Token: s.AuthToken,
+		},
+		Settings: []Settings{settings},
+	}
+}

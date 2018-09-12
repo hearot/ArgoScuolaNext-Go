@@ -126,6 +126,24 @@ func TestSession_Docenticlasse(t *testing.T) {
 	log.Print(session.Docenticlasse())
 }
 
+func TestSettings_GetSession(t *testing.T) {
+	credentials := Credentials{
+		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
+		Password:   os.Getenv("PASSWORD_ARGOSCUOLANEXT"),
+		SchoolCode: os.Getenv("SCHOOLCODE_ARGOSCUOLANEXT"),
+	}
+
+	session, err := credentials.Login()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	sessionFork := session.Settings[0].GetSession()
+
+	log.Print(sessionFork)
+}
+
 func TestSession_Oggi(t *testing.T) {
 	credentials := Credentials{
 		Username:   os.Getenv("USERNAME_ARGOSCUOLANEXT"),
