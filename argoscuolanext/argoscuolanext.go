@@ -41,14 +41,16 @@
 //             SchoolCode: "SCHOOLCODE",
 //         )
 //
-//         _, err = Credentials.Login()
+//         session, err = Credentials.Login()
 //
 //         if err != nil {
 //             log.Fatal(err)
 //         }
+//
+//         log.Print(session.Assenze())
 //     }
 //
-// See the documentation for Credentials for more details.
+// See the documentation for more details.
 package argoscuolanext
 
 import (
@@ -59,14 +61,6 @@ import (
 	"time"
 )
 
-// Credentials is the fundamental struct of the
-// entire API, it stores the user Credentials.
-type Credentials struct {
-	SchoolCode string // The School code of your School on ArgoScuolaNext (not the ministerial code!)
-	Username   string // Your username on ArgoScuolaNext
-	Password   string // Your password on ArgoScuolaNext
-}
-
 // restApiUrl is the REST API Endpoint.
 var restApiUrl = "https://www.portaleargo.it/famiglia/api/rest/"
 
@@ -75,30 +69,6 @@ var argoKey = "ax6542sdru3217t4eesd9"
 
 // argoSession is the version of the API.
 var argoVersion = "2.0.2"
-
-// Session represents the current connection
-// to the API. It stores the Credentials, Keys and
-// tokens.
-type Session struct {
-	Credentials *Credentials   // An instance of Credentials that stores your credentials
-	LoggedIn    bool           // If the user logged in
-	Auth        Authentication // The representation of the Authentication tokens
-	Settings    []Settings     // An array of informations about the user
-}
-
-// Struct used by the Cambiopassword method to
-// change the password. It will be converted to JSON.
-type PasswordStruct struct {
-	OldPassword string `json:"vecchiaPassword"` // The old password
-	NewPassword string `json:"nuovaPassword"`   // The new password
-}
-
-// Struct used for the Authentication. It contains the type of the user and
-// the authentication token.
-type Authentication struct {
-	Token      string `json:"token"`      // The authentication token
-	TipoUtente string `json:"tipoUtente"` // The type of the user
-}
 
 // Struct used to define all abilitations (what the users can do using
 // the APIs).
@@ -139,50 +109,6 @@ type Abilitations struct {
 	GiustificazioniAssenze       bool `json:"GIUSTIFICAZIONI_ASSENZE"`        // If the student can justify his absences
 }
 
-// Struct that represents the start and the end of the school.
-type SchoolTime struct {
-	DatInizio string `json:"datInizio"` // The start (format: YYYY-MM-DD)
-	DatFine   string `json:"datFine"`   // The end (format: YYYY-MM-DD)
-}
-
-// Struct that represents the student.
-type Student struct {
-	DesCf                string `json:"desCf"`                // The student's "codice fiscale"
-	DesCognome           string `json:"desCognome"`           // The student's surname
-	DesVia               string `json:"desVia"`               // The student's house street
-	DesCap               string `json:"desCap"`               // The student's house cap
-	DesNome              string `json:"desNome"`              // The student's name
-	DesCellulare         string `json:"desCellulare"`         // The student's mobile number
-	DesComuneNascita     string `json:"desComuneNascita"`     // The student's birthplace
-	FlgSesso             string `json:"flgSesso"`             // The student's gender
-	DatNascita           string `json:"datNascita"`           // The student's birth
-	DesIndirizzoRecapito string `json:"desIndirizzoRecapito"` // The student's house for shipping
-	DesComuneRecapito    string `json:"desComuneRecapito"`    // The student's city for shipping
-	DesCapResidenza      string `json:"desCapResidenza"`      // The student's city cap
-	DesComuneResidenza   string `json:"desComuneResidenza"`   // The student's city
-	DesTelefono          string `json:"desTelefono"`          // The student's house phone
-	DesCittadinanza      string `json:"desCittadinanza"`      // The student's citizenship
-}
-
-// Struct that contains all informations about an user.
-type Settings struct {
-	SchedaSelezionata bool         `json:"schedaSelezionata"` // The chosen student
-	DesScuola         string       `json:"desScuola"`         // The student's school
-	PrgScuola         int          `json:"prgScuola"`         // The student's school ID
-	PrgScheda         int          `json:"prgScheda"`         // The student's ID
-	DesSede           string       `json:"desSede"`           // The student's school venue
-	AuthToken         string       `json:"authToken"`         // The student's auth token
-	Alunno            Student      `json:"alunno"`            // The student
-	CodMin            string       `json:"codMin"`            // The ministerial code
-	NumAnno           int          `json:"numAnno"`           // The year
-	PrgAlunno         int          `json:"prgAlunno"`         // The student's ID in his classroom
-	PrgClasse         int          `json:"prgClasse"`         // The student's classroom ID
-	DesDenominazione  string       `json:"desDenominazione"`  // The student's denomination
-	DesCorso          string       `json:"desCorso"`          // The student's classroom letter (in Italy, all classes have got a letter)
-	Abilitazioni      Abilitations `json:"abilitazioni"`      // What the student can do using the APIs
-	AnnoScolastico    SchoolTime   `json:"annoScolastico"`    // The representation of the year, start & end dates
-}
-
 // Struct that represents an absence done by the student.
 type Absence struct {
 	CodEvento          string `json:"codEvento"`          // The event code
@@ -205,6 +131,82 @@ type Absence struct {
 type Absences struct {
 	Dati         []Absence    `json:"dati"`         // The absences done by the student
 	Abilitazioni Abilitations `json:"abilitazioni"` // The student's abilitations
+}
+
+// Struct used for the Authentication. It contains the type of the user and
+// the authentication token.
+type Authentication struct {
+	Token      string `json:"token"`      // The authentication token
+	TipoUtente string `json:"tipoUtente"` // The type of the user
+}
+
+// Credentials is the fundamental struct of the
+// entire API, it stores the user Credentials.
+type Credentials struct {
+	SchoolCode string // The School code of your School on ArgoScuolaNext (not the ministerial code!)
+	Username   string // Your username on ArgoScuolaNext
+	Password   string // Your password on ArgoScuolaNext
+}
+
+// Struct used by the Cambiopassword method to
+// change the password. It will be converted to JSON.
+type PasswordStruct struct {
+	OldPassword string `json:"vecchiaPassword"` // The old password
+	NewPassword string `json:"nuovaPassword"`   // The new password
+}
+
+// Struct that represents the start and the end of the school.
+type SchoolTime struct {
+	DatInizio string `json:"datInizio"` // The start (format: YYYY-MM-DD)
+	DatFine   string `json:"datFine"`   // The end (format: YYYY-MM-DD)
+}
+
+// Session represents the current connection
+// to the API. It stores the Credentials, Keys and
+// tokens.
+type Session struct {
+	Credentials *Credentials   // An instance of Credentials that stores your credentials
+	LoggedIn    bool           // If the user logged in
+	Auth        Authentication // The representation of the Authentication tokens
+	Settings    []Settings     // An array of informations about the user
+}
+
+// Struct that contains all informations about an user.
+type Settings struct {
+	SchedaSelezionata bool         `json:"schedaSelezionata"` // The chosen student
+	DesScuola         string       `json:"desScuola"`         // The student's school
+	PrgScuola         int          `json:"prgScuola"`         // The student's school ID
+	PrgScheda         int          `json:"prgScheda"`         // The student's ID
+	DesSede           string       `json:"desSede"`           // The student's school venue
+	AuthToken         string       `json:"authToken"`         // The student's auth token
+	Alunno            Student      `json:"alunno"`            // The student
+	CodMin            string       `json:"codMin"`            // The ministerial code
+	NumAnno           int          `json:"numAnno"`           // The year
+	PrgAlunno         int          `json:"prgAlunno"`         // The student's ID in his classroom
+	PrgClasse         int          `json:"prgClasse"`         // The student's classroom ID
+	DesDenominazione  string       `json:"desDenominazione"`  // The student's denomination
+	DesCorso          string       `json:"desCorso"`          // The student's classroom letter (in Italy, all classes have got a letter)
+	Abilitazioni      Abilitations `json:"abilitazioni"`      // What the student can do using the APIs
+	AnnoScolastico    SchoolTime   `json:"annoScolastico"`    // The representation of the year, start & end dates
+}
+
+// Struct that represents the student.
+type Student struct {
+	DesCf                string `json:"desCf"`                // The student's "codice fiscale"
+	DesCognome           string `json:"desCognome"`           // The student's surname
+	DesVia               string `json:"desVia"`               // The student's house street
+	DesCap               string `json:"desCap"`               // The student's house cap
+	DesNome              string `json:"desNome"`              // The student's name
+	DesCellulare         string `json:"desCellulare"`         // The student's mobile number
+	DesComuneNascita     string `json:"desComuneNascita"`     // The student's birthplace
+	FlgSesso             string `json:"flgSesso"`             // The student's gender
+	DatNascita           string `json:"datNascita"`           // The student's birth
+	DesIndirizzoRecapito string `json:"desIndirizzoRecapito"` // The student's house for shipping
+	DesComuneRecapito    string `json:"desComuneRecapito"`    // The student's city for shipping
+	DesCapResidenza      string `json:"desCapResidenza"`      // The student's city cap
+	DesComuneResidenza   string `json:"desComuneResidenza"`   // The student's city
+	DesTelefono          string `json:"desTelefono"`          // The student's house phone
+	DesCittadinanza      string `json:"desCittadinanza"`      // The student's citizenship
 }
 
 // Struct that represents a Teacher.
