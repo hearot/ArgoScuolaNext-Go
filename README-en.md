@@ -1,5 +1,5 @@
 # ArgoScuolaNext API in Go
-[![GoDoc](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext?status.svg)](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](./LICENSE) [![Dev @hearot](https://img.shields.io/badge/Dev-%20@hearot-blue.svg)](https://telegram.me/hearot)
+[![GoDoc](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext?status.svg)](https://godoc.org/github.com/hearot/ArgoScuolaNext-Go/argoscuolanext) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](./LICENSE) [![Dev hearot](https://img.shields.io/badge/Dev-%20hearot-blue.svg)](https://hearot.it)
 
 Implementation of ArgoScuolaNext APIs, intended to be used to view a student's statistics and information.
 
