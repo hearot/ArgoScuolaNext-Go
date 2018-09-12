@@ -54,7 +54,6 @@ package argoscuolanext
 import (
 	"encoding/json"
 	"errors"
-	"github.com/asmcos/requests"
 	"github.com/parnurzeal/gorequest"
 	"strconv"
 	"time"
@@ -212,33 +211,29 @@ type Absences struct {
 // that is used to log in to the API. It will
 // return a Session instance.
 func (c *Credentials) Login() (Session, error) {
-	req := requests.Requests()
+	request := gorequest.New()
 
 	session := Session{
 		Credentials: c,
 	}
 
-	r, err := req.Get(
-		restApiUrl+"login",
-		requests.Header{
-			"Content-Type": "application/json",
-			"x-key-app":    argoKey,
-			"x-version":    argoVersion,
-			"user-agent":   "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
-			"x-cod-min":    session.Credentials.SchoolCode,
-			"x-user-id":    session.Credentials.Username,
-			"x-pwd":        session.Credentials.Password,
-		},
-		requests.Params{
-			"_dc": time.Now().Format("20060102150405"),
-		},
-	)
+	_, bodyResp, errs := request.Get(restApiUrl+"login").
+		Set("Content-Type", "application/json").
+		Set("x-key-app", argoKey).
+		Set("x-version", argoVersion).
+		Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36").
+		Set("x-cod-min", session.Credentials.SchoolCode).
+		Set("x-user-id", session.Credentials.Username).
+		Set("x-pwd", session.Credentials.Password).
+		Query("_dc=" + time.Now().Format("20060102150405")).
+		Query("datGiorno=" + time.Now().Format("2006-01-02")).
+		End()
 
-	if err != nil {
+	if len(errs) > 0 {
 		return Session{}, errors.New("authentication failed, check your Credentials")
 	}
 
-	err = r.Json(&session.Auth)
+	err := json.Unmarshal([]byte(bodyResp), &session.Auth)
 
 	if err != nil {
 		return Session{}, errors.New("authentication failed, check your Credentials")
@@ -246,26 +241,22 @@ func (c *Credentials) Login() (Session, error) {
 
 	session.LoggedIn = true
 
-	r, err = req.Get(
-		restApiUrl+"schede",
-		requests.Header{
-			"Content-Type": "application/json",
-			"x-key-app":    argoKey,
-			"x-version":    argoVersion,
-			"user-agent":   "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
-			"x-cod-min":    session.Credentials.SchoolCode,
-			"x-auth-token": session.Auth.Token,
-		},
-		requests.Params{
-			"_dc": time.Now().Format("20060102150405"),
-		},
-	)
+	_, bodyResp, errs = request.Get(restApiUrl+"schede").
+		Set("Content-Type", "application/json").
+		Set("x-key-app", argoKey).
+		Set("x-version", argoVersion).
+		Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36").
+		Set("x-cod-min", session.Credentials.SchoolCode).
+		Set("x-auth-token", session.Auth.Token).
+		Query("_dc=" + time.Now().Format("20060102150405")).
+		Query("datGiorno=" + time.Now().Format("2006-01-02")).
+		End()
 
-	if err != nil {
-		return Session{Credentials: c}, err
+	if len(errs) > 0 {
+		return Session{}, errors.New("authentication failed, check your Credentials")
 	}
 
-	err = r.Json(&session.Settings)
+	err = json.Unmarshal([]byte(bodyResp), &session.Settings)
 
 	if err != nil {
 		return Session{}, errors.New("authentication failed, check your Credentials")
@@ -278,32 +269,27 @@ func (c *Credentials) Login() (Session, error) {
 // to do a request to the API. It will return
 // the JSON.
 func (s *Session) request(method string, date time.Time) (string, error) {
-	req := requests.Requests()
+	request := gorequest.New()
 
-	r, err := req.Get(
-		restApiUrl+method,
-		requests.Header{
-			"Content-Type": "application/json",
-			"x-key-app":    argoKey,
-			"x-version":    argoVersion,
-			"user-agent":   "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
-			"x-cod-min":    s.Credentials.SchoolCode,
-			"x-auth-token": s.Auth.Token,
-			"x-prg-alunno": strconv.Itoa(s.Settings[0].PrgAlunno),
-			"x-prg-scheda": strconv.Itoa(s.Settings[0].PrgScheda),
-			"x-prg-scuola": strconv.Itoa(s.Settings[0].PrgScuola),
-		},
-		requests.Params{
-			"_dc":       time.Now().Format("20060102150405"),
-			"datGiorno": date.Format("2006-01-02"),
-		},
-	)
+	_, bodyResp, errs := request.Get(restApiUrl+method).
+		Set("Content-Type", "application/json").
+		Set("x-key-app", argoKey).
+		Set("x-version", argoVersion).
+		Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36").
+		Set("x-cod-min", s.Credentials.SchoolCode).
+		Set("x-auth-token", s.Auth.Token).
+		Set("x-prg-alunno", strconv.Itoa(s.Settings[0].PrgAlunno)).
+		Set("x-prg-scheda", strconv.Itoa(s.Settings[0].PrgScheda)).
+		Set("x-prg-scuola", strconv.Itoa(s.Settings[0].PrgScuola)).
+		Query("_dc=" + time.Now().Format("20060102150405")).
+		Query("datGiorno=" + date.Format("2006-01-02")).
+		End()
 
-	if err != nil {
-		return "{}", err
+	if len(errs) > 0 {
+		return "{}", errors.New("authentication failed, check your Credentials")
 	}
 
-	return r.Text(), nil
+	return bodyResp, nil
 }
 
 // Post request is the method used by Session struct
