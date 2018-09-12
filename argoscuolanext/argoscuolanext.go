@@ -21,36 +21,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ArgoScuolaNext APIs for Go.
-//
-// ArgoScuolaNext APIs for Go creates a platform that can
-// be used to check a student's statistics using just his
-// Credentials. For example:
-//
-//     package main
-//
-//     import (
-//         "github.com/hearot/argoscuolanext-go/argoscuolanext"
-//         "log"
-//     )
-//
-//     func main() {
-//         Credentials = argoscuolanext.Credentials(
-//             Username: "USERNAME",
-//             Password: "PASSWORD",
-//             SchoolCode: "SCHOOLCODE",
-//         )
-//
-//         session, err = Credentials.Login()
-//
-//         if err != nil {
-//             log.Fatal(err)
-//         }
-//
-//         log.Print(session.Assenze())
-//     }
-//
-// See the documentation for more details.
+/*
+Package argoscuolanext for Go creates a platform that can
+be used to check a student's statistics using just his
+Credentials. For example:
+
+    package main
+
+    import (
+        "github.com/hearot/argoscuolanext-go/argoscuolanext"
+        "log"
+    )
+
+    func main() {
+        Credentials = argoscuolanext.Credentials(
+            Username: "USERNAME",
+            Password: "PASSWORD",
+            SchoolCode: "SCHOOLCODE",
+        )
+
+        session, err = Credentials.Login()
+
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        log.Print(session.Assenze())
+    }
+
+See the documentation for more details.
+*/
 package argoscuolanext
 
 import (
@@ -61,8 +61,8 @@ import (
 	"time"
 )
 
-// restApiUrl is the REST API Endpoint.
-var restApiUrl = "https://www.portaleargo.it/famiglia/api/rest/"
+// restAPIURL is the REST API Endpoint.
+var restAPIURL = "https://www.portaleargo.it/famiglia/api/rest/"
 
 // argoKey is the application key for the API.
 var argoKey = "ax6542sdru3217t4eesd9"
@@ -70,8 +70,8 @@ var argoKey = "ax6542sdru3217t4eesd9"
 // argoSession is the version of the API.
 var argoVersion = "2.0.2"
 
-// Struct used to define all abilitations (what the users can do using
-// the APIs).
+// Abilitations is used to define what the user can do using
+// the APIs.
 type Abilitations struct {
 	OrarioScolastico             bool `json:"ORARIO_SCOLASTICO"`              // If the student can view his timetable
 	ValutazioniPeriodiche        bool `json:"VALUTAZIONI_PERIODICHE"`         // If the student can view his periodic marks
@@ -109,7 +109,7 @@ type Abilitations struct {
 	GiustificazioniAssenze       bool `json:"GIUSTIFICAZIONI_ASSENZE"`        // If the student can justify his absences
 }
 
-// Struct that represents an absence done by the student.
+// Absence represents a student's absence.
 type Absence struct {
 	CodEvento          string `json:"codEvento"`          // The event code
 	NumOra             string `json:"numOra"`             // The absence hours
@@ -127,14 +127,15 @@ type Absence struct {
 	RegistrataDa       string `json:"registrataDa"`       // Who registered the absence
 }
 
-// Struct that represents the response of the "assenze" method.
+// Absences represents multiple absences and also contains
+// the user's abilitations.
 type Absences struct {
 	Dati         []Absence    `json:"dati"`         // The absences done by the student
 	Abilitazioni Abilitations `json:"abilitazioni"` // The student's abilitations
 }
 
-// Struct used for the Authentication. It contains the type of the user and
-// the authentication token.
+// Authentication represents the tokens and needed informations used
+// to access the APIs.
 type Authentication struct {
 	Token      string `json:"token"`      // The authentication token
 	TipoUtente string `json:"tipoUtente"` // The type of the user
@@ -148,17 +149,16 @@ type Credentials struct {
 	Password   string // Your password on ArgoScuolaNext
 }
 
-// Struct used for the "oggi" method. It represents
-// a day.
+// Day represents what the "oggi" method returns, a list
+// of events.
 type Day struct {
 	Dati          []Event      `json:"dati"`          // An array of events happened during that day
 	Abilitazioni  Abilitations `json:"abilitazioni"`  // The student's abilitations
 	NuoviElementi int          `json:"nuoviElementi"` // If there are new elements
 }
 
-// Representation of an event.
-// It could be homeworks, arguments,
-// marks and other types of events.
+// Event represents something happened during a day, like
+// given homeworks, arguments and marks.
 type Event struct {
 	Dati struct {
 		DatGiorno    string `json:"datGiorno"`    // The day when the event happened
@@ -183,14 +183,14 @@ type Event struct {
 	CodMin    string `json:"codMin"`    // The ministerial code
 }
 
-// Struct used by the Cambiopassword method to
-// change the password. It will be converted to JSON.
+// PasswordStruct is used to make the "cambiopassword" query. It
+// represents the old password and the new one.
 type PasswordStruct struct {
 	OldPassword string `json:"vecchiaPassword"` // The old password
 	NewPassword string `json:"nuovaPassword"`   // The new password
 }
 
-// Struct that represents the start and the end of the school.
+// SchoolTime represents the start and the end of the school.
 type SchoolTime struct {
 	DatInizio string `json:"datInizio"` // The start (format: YYYY-MM-DD)
 	DatFine   string `json:"datFine"`   // The end (format: YYYY-MM-DD)
@@ -206,7 +206,7 @@ type Session struct {
 	Settings    []Settings     // An array of informations about the user
 }
 
-// Struct that contains all informations about an user.
+// Settings contains all information about an user.
 type Settings struct {
 	SchedaSelezionata bool         `json:"schedaSelezionata"` // The chosen student
 	DesScuola         string       `json:"desScuola"`         // The student's school
@@ -225,7 +225,7 @@ type Settings struct {
 	AnnoScolastico    SchoolTime   `json:"annoScolastico"`    // The representation of the year, start & end dates
 }
 
-// Struct that represents the student.
+// Student represents all information about the user.
 type Student struct {
 	DesCf                string `json:"desCf"`                // The student's "codice fiscale"
 	DesCognome           string `json:"desCognome"`           // The student's surname
@@ -244,7 +244,7 @@ type Student struct {
 	DesCittadinanza      string `json:"desCittadinanza"`      // The student's citizenship
 }
 
-// Struct that represents a Teacher.
+// Teacher contains all information about a student's teacher.
 type Teacher struct {
 	PrgClasse   int    `json:"prgClasse"`   // The student's classroom ID
 	PrgAnagrafe int    `json:"prgAnagrafe"` // The teacher's birth ID
@@ -258,10 +258,10 @@ type Teacher struct {
 	CodMin string `json:"codMin"` // The ministerial code
 }
 
-// It represents an array of Teacher objects.
+// Teachers represents an array of Teacher objects.
 type Teachers []Teacher
 
-// Login() is a method of Credentials struct
+// Login is a method of Credentials struct
 // that is used to log in to the API. It will
 // return a Session instance.
 func (c *Credentials) Login() (Session, error) {
@@ -271,7 +271,7 @@ func (c *Credentials) Login() (Session, error) {
 		Credentials: c,
 	}
 
-	_, bodyResp, errs := request.Get(restApiUrl+"login").
+	_, bodyResp, errs := request.Get(restAPIURL+"login").
 		Set("Content-Type", "application/json").
 		Set("x-key-app", argoKey).
 		Set("x-version", argoVersion).
@@ -295,7 +295,7 @@ func (c *Credentials) Login() (Session, error) {
 
 	session.LoggedIn = true
 
-	_, bodyResp, errs = request.Get(restApiUrl+"schede").
+	_, bodyResp, errs = request.Get(restAPIURL+"schede").
 		Set("Content-Type", "application/json").
 		Set("x-key-app", argoKey).
 		Set("x-version", argoVersion).
@@ -319,13 +319,13 @@ func (c *Credentials) Login() (Session, error) {
 	return session, nil
 }
 
-// Request is the method used by Session struct
+// request is the method used by Session struct
 // to do a request to the API. It will return
 // the JSON.
 func (s *Session) request(method string, date time.Time) (string, error) {
 	request := gorequest.New()
 
-	_, bodyResp, errs := request.Get(restApiUrl+method).
+	_, bodyResp, errs := request.Get(restAPIURL+method).
 		Set("Content-Type", "application/json").
 		Set("x-key-app", argoKey).
 		Set("x-version", argoVersion).
@@ -346,7 +346,7 @@ func (s *Session) request(method string, date time.Time) (string, error) {
 	return bodyResp, nil
 }
 
-// Post request is the method used by Session struct
+// postRequest is the method used by Session struct
 // to do a request to the API using a JSON body.
 // It will return the converted JSON.
 func (s *Session) postRequest(method string, body string, date time.Time) (interface{}, error) {
@@ -354,7 +354,7 @@ func (s *Session) postRequest(method string, body string, date time.Time) (inter
 
 	request := gorequest.New()
 
-	_, bodyResp, errs := request.Post(restApiUrl+method).
+	_, bodyResp, errs := request.Post(restAPIURL+method).
 		Set("Content-Type", "application/json").
 		Set("x-key-app", argoKey).
 		Set("x-version", argoVersion).
@@ -382,7 +382,7 @@ func (s *Session) postRequest(method string, body string, date time.Time) (inter
 	return res, nil
 }
 
-// Returns the student's absences.
+// Assenze is used to return the student's absences.
 func (s *Session) Assenze() (Absences, error) {
 	absences := Absences{}
 
@@ -397,17 +397,17 @@ func (s *Session) Assenze() (Absences, error) {
 	return absences, nil
 }
 
-// Returns what the student's done.
+// Argomenti is used to return what the student has done.
 func (s *Session) Argomenti() (interface{}, error) {
 	return s.request("argomenti", time.Now())
 }
 
-// Returns the student's homeworks.
+// Compiti is used to return all student's homework.
 func (s *Session) Compiti() (interface{}, error) {
 	return s.request("compiti", time.Now())
 }
 
-// Returns the student's teachers.
+// Docenticlasse is used to return all student's teachers.
 func (s *Session) Docenticlasse() (Teachers, error) {
 	teachers := Teachers{}
 
@@ -422,7 +422,7 @@ func (s *Session) Docenticlasse() (Teachers, error) {
 	return teachers, nil
 }
 
-// Change the password of the user.
+// Cambiopassword is used to change the user's password.
 func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
 	m := PasswordStruct{
 		OldPassword: s.Credentials.Password,
@@ -438,7 +438,7 @@ func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
 	return s.postRequest("cambiopassword", string(query), time.Now())
 }
 
-// Returns the student's plan.
+// Oggi is used to return what the student has done during a day.
 //
 // You can view what's happening today or on another day just
 // by passing a time.Time object as parameter. If you want
@@ -457,27 +457,27 @@ func (s *Session) Oggi(date time.Time) (Day, error) {
 	return day, nil
 }
 
-// Returns the student's timetable.
+// Orario is used to return the timetable.
 func (s *Session) Orario() (interface{}, error) {
 	return s.request("orario", time.Now())
 }
 
-// Returns the student's annotations.
+// Notedisciplinari is used to return the student's annotations.
 func (s *Session) Notedisciplinari() (interface{}, error) {
 	return s.request("notedisciplinari", time.Now())
 }
 
-// Returns the student's notes.
+// Promemoria is used to return the student's notes.
 func (s *Session) Promemoria() (interface{}, error) {
 	return s.request("promemoria", time.Now())
 }
 
-// Returns the student's marks.
+// Votigiornalieri is used to return the student's marks.
 func (s *Session) Votigiornalieri() (interface{}, error) {
 	return s.request("votigiornalieri", time.Now())
 }
 
-// Returns the student's final marks.
+// Votiscrutinio is used to return the student's final marks.
 func (s *Session) Votiscrutinio() (interface{}, error) {
 	return s.request("votiscrutinio", time.Now())
 }
