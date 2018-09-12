@@ -207,6 +207,23 @@ type Absences struct {
 	Abilitazioni Abilitations `json:"abilitazioni"` // The student's abilitations
 }
 
+// Struct that represents a Teacher.
+type Teacher struct {
+	PrgClasse   int    `json:"prgClasse"`   // The student's classroom ID
+	PrgAnagrafe int    `json:"prgAnagrafe"` // The teacher's birth ID
+	PrgScuola   int    `json:"prgScuola"`   // The student's school's ID
+	Materie     string `json:"materie"`     // The teacher's subject
+	Docente     struct {
+		Email   string `json:"email"`   // The teacher's e-mail
+		Nome    string `json:"nome"`    // The teacher's name
+		Cognome string `json:"cognome"` // The teacher's surname
+	} `json:"docente"` // A struct that represents some useful informations about the Teacher
+	CodMin string `json:"codMin"` // The ministerial code
+}
+
+// It represents an array of Teacher objects.
+type Teachers []Teacher
+
 // Login() is a method of Credentials struct
 // that is used to log in to the API. It will
 // return a Session instance.
@@ -354,8 +371,18 @@ func (s *Session) Compiti() (interface{}, error) {
 }
 
 // Returns the student's teachers.
-func (s *Session) Docenticlasse() (interface{}, error) {
-	return s.request("docenticlasse", time.Now())
+func (s *Session) Docenticlasse() (Teachers, error) {
+	teachers := Teachers{}
+
+	response, err := s.request("docenticlasse", time.Now())
+
+	if err != nil {
+		return teachers, err
+	}
+
+	json.Unmarshal([]byte(response), &teachers)
+
+	return teachers, nil
 }
 
 // Change the password of the user.
