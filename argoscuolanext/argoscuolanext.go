@@ -148,6 +148,41 @@ type Credentials struct {
 	Password   string // Your password on ArgoScuolaNext
 }
 
+// Struct used for the "oggi" method. It represents
+// a day.
+type Day struct {
+	Dati          []Event      `json:"dati"`          // An array of events happened during that day
+	Abilitazioni  Abilitations `json:"abilitazioni"`  // The student's abilitations
+	NuoviElementi int          `json:"nuoviElementi"` // If there are new elements
+}
+
+// Representation of an event.
+// It could be homeworks, arguments,
+// marks and other types of events.
+type Event struct {
+	Dati struct {
+		DatGiorno    string `json:"datGiorno"`    // The day when the event happened
+		DesMateria   string `json:"desMateria"`   // The subject
+		NumAnno      int    `json:"numAnno"`      // The year
+		PrgMateria   string `json:"prgMateria"`   // The subject's ID
+		PrgClasse    string `json:"prgClasse"`    // The student's class ID
+		DesCompiti   string `json:"desCompiti"`   // The assigned homeworks
+		DesArgomento string `json:"desArgomento"` // The arguments of the day
+		PrgScuola    string `json:"prgScuola"`    // The student's school ID
+		Docente      string `json:"docente"`      // The teacher who registered the event
+		CodMin       string `json:"codMin"`       // The ministerial code
+	} `json:"dati"` // The useful informations of the event
+	Giorno    string `json:"giorno"`    // The day when the event happened or will happen
+	NumAnno   int    `json:"numAnno"`   // The year when the event happened or will happen
+	PrgAlunno string `json:"prgAlunno"` // The student's ID in his classroom
+	PrgScheda string `json:"prgScheda"` // The student's ID
+	PrgScuola string `json:"prgScuola"` // The student's school ID
+	Tipo      string `json:"tipo"`      // The type of the event
+	Titolo    string `json:"titolo"`    // The event title
+	Ordine    int    `json:"ordine"`    // The event ID
+	CodMin    string `json:"codMin"`    // The ministerial code
+}
+
 // Struct used by the Cambiopassword method to
 // change the password. It will be converted to JSON.
 type PasswordStruct struct {
@@ -408,8 +443,18 @@ func (s *Session) Cambiopassword(newPassword string) (interface{}, error) {
 // You can view what's happening today or on another day just
 // by passing a time.Time object as parameter. If you want
 // to get statistics about today, pass time.Now().
-func (s *Session) Oggi(date time.Time) (interface{}, error) {
-	return s.request("assenze", date)
+func (s *Session) Oggi(date time.Time) (Day, error) {
+	day := Day{}
+
+	response, err := s.request("oggi", date)
+
+	if err != nil {
+		return day, err
+	}
+
+	json.Unmarshal([]byte(response), &day)
+
+	return day, nil
 }
 
 // Returns the student's timetable.
