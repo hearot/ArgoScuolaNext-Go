@@ -134,6 +134,27 @@ type Absences struct {
 	Abilitazioni Abilitations `json:"abilitazioni"` // The student's abilitations
 }
 
+// Annotation represents a student's annotation, giving all
+// information about it.
+type Annotation struct {
+	PrgAlunno       string `json:"prgAlunno"`       // The student's ID in his class
+	NumAnno         string `json:"numAnno"`         // The year
+	FlgVisualizzata string `json:"flgVisualizzata"` // If the annotations has been seen by student's parents
+	PrgAnagrafe     string `json:"prgAnagrafe"`     // The student's information ID
+	PrgNota         string `json:"prgNota"`         // The ID of the annotation
+	PrgScheda       string `json:"prgScheda"`       // The student's ID
+	PrgScuola       string `json:"prgScuola"`       // The student's school ID
+	DesNota         string `json:"desNota"`         // The description of the annotation
+	DatNota         string `json:"datNota"`         // When the student got this annotation (format: YYYY-MM-DD)
+	Docente         string `json:"docente"`         // The teacher who wrote the annotation
+	CodMin          string `json:"codMin"`          // The ministerial code
+}
+
+// Annotations represents multiple annotations.
+type Annotations struct {
+	Dati []Annotation `json:"dati"` // The student's annotations
+}
+
 // Authentication represents the tokens and needed informations used
 // to access the APIs.
 type Authentication struct {
@@ -463,8 +484,18 @@ func (s *Session) Orario() (interface{}, error) {
 }
 
 // Notedisciplinari is used to return the student's annotations.
-func (s *Session) Notedisciplinari() (interface{}, error) {
-	return s.request("notedisciplinari", time.Now())
+func (s *Session) Notedisciplinari() (Annotations, error) {
+	annotations := Annotations{}
+
+	response, err := s.request("notedisciplinari", time.Now())
+
+	if err != nil {
+		return annotations, err
+	}
+
+	json.Unmarshal([]byte(response), &annotations)
+
+	return annotations, nil
 }
 
 // Promemoria is used to return the student's notes.
