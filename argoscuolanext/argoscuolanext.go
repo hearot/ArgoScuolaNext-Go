@@ -62,13 +62,13 @@ import (
 )
 
 // restAPIURL is the REST API Endpoint.
-var restAPIURL = "https://www.portaleargo.it/famiglia/api/rest/"
+const restAPIURL = "https://www.portaleargo.it/famiglia/api/rest/"
 
 // argoKey is the application key for the API.
-var argoKey = "ax6542sdru3217t4eesd9"
+const argoKey = "ax6542sdru3217t4eesd9"
 
 // argoSession is the version of the API.
-var argoVersion = "2.0.2"
+const argoVersion = "2.0.2"
 
 // Abilitations is used to define what the user can do using
 // the APIs.
