@@ -204,6 +204,30 @@ type Event struct {
 	CodMin    string `json:"codMin"`    // The ministerial code
 }
 
+// Mark represents a student's mark.
+type Mark struct {
+	DatGiorno      string  `json:"datGiorno"`      // The day when the event happened
+	DesMateria     string  `json:"desMateria"`     // The subject
+	PrgMateria     string  `json:"prgMateria"`     // The subject's ID
+	PrgScuola      string  `json:"prgScuola"`      // The student's school ID
+	PrgScheda      string  `json:"prgScheda"`      // The student's ID
+	CodVotoPratico string  `json:"codVotoPratico"` // The type of the test
+	DecValore      float64 `json:"decValore"`      // The decimal value of the student's mark
+	CodMin         string  `json:"codMin"`         // The ministerial code
+	DesProva       string  `json:"desProva"`       // The test's description
+	CodVoto        string  `json:"codVoto"`        // The student's mark
+	NumAnno        int     `json:"numAnno"`        // The year
+	PrgAlunno      int     `json:"prgAlunno"`      // The student's ID in his classroom
+	DesCommento    string  `json:"desCommento"`    // The teacher's comment about the test's results
+	Docente        string  `json:"docente"`        // The teacher who made the test
+}
+
+// Marks represents the response of the "votigiornalieri" method.
+type Marks struct {
+	Dati         []Mark       `json:"dati"`         // A list of all the student's marks
+	Abilitazioni Abilitations `json:"abilitazioni"` // The student's abilitations
+}
+
 // PasswordStruct is used to make the "cambiopassword" query. It
 // represents the old password and the new one.
 type PasswordStruct struct {
@@ -504,8 +528,18 @@ func (s *Session) Promemoria() (interface{}, error) {
 }
 
 // Votigiornalieri is used to return the student's marks.
-func (s *Session) Votigiornalieri() (interface{}, error) {
-	return s.request("votigiornalieri", time.Now())
+func (s *Session) Votigiornalieri() (Marks, error) {
+	marks := Marks{}
+
+	response, err := s.request("votigiornalieri", time.Now())
+
+	if err != nil {
+		return marks, err
+	}
+
+	json.Unmarshal([]byte(response), &marks)
+
+	return marks, nil
 }
 
 // Votiscrutinio is used to return the student's final marks.
